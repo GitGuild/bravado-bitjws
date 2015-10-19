@@ -1,7 +1,7 @@
 # bravado-bitjws
 bitjws authentication for the bravado Swagger client
 
-Bravado-bitjws is an add on for Bravado that allows [bitjws](https://github.com/g-p-g/bitjws)
+Bravado-bitjws is an add on for Bravado that allows [bitjws](https://github.com/g-p-g/bitjws) authentication.
 
 ## Installation
 
@@ -26,8 +26,8 @@ url = "http://0.0.0.0:8002/static/swagger.json"
 client = BitJWSSwaggerClient.from_url("%s" % url, privkey=privkey)
 ```
 
-If no key is provided to BitJWSSwaggerClient, one will be generated. However the private key originated, it is important to store private key somewhere secure.  
+If no key is provided to BitJWSSwaggerClient, one will be generated. However the private key originated, it is important to store keys securely.
 
 ## Known Limitations
 
-Currently there is no management of server keys. This means that Bravado-bitjws checks the signature of server responses, but trusts all keys. It is up to the Bravado-bitjws user to match the server's key against a trusted list.
+Currently there is no management of server keys. This means that Bravado-bitjws checks the signature of server responses, but does not care which key signed. It is up to the Bravado-bitjws user to determine the trustworthiness of the server's key.
