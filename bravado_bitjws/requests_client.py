@@ -131,10 +131,13 @@ class BitJWSRequestsResponseAdapter(IncomingResponse):
         return self._delegate.reason
 
     def json(self, **kwargs):
+        jso = {}
         if 'content-type' in self._delegate.headers and \
                 'application/jose' in self._delegate.headers['content-type']:
             rawtext = self.text.decode('utf8')
-            headers, jso = bitjws.validate_deserialize(rawtext)
+            headers, jwtpayload = bitjws.validate_deserialize(rawtext)
+            if 'data' in jwtpayload:
+                jso = jwtpayload['data']
         else:
             jso = self._delegate.json(**kwargs)
         return jso
