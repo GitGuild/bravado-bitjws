@@ -114,6 +114,8 @@ class BitJWSSwaggerClient(SwaggerClient):
             http_client = BitJWSRequestsClient()
             http_client.set_bitjws_key(host,
                     bitjws.privkey_to_wif(privkey.private_key))
+        request_headers = request_headers or {}
+        request_headers['content-type'] = 'application/jws'
         loader = Loader(http_client, request_headers=request_headers)
         spec_dict = loader.load_spec(spec_url)
         return cls.from_spec(spec_dict, spec_url, http_client, config,
