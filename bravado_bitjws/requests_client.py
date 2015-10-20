@@ -30,7 +30,7 @@ class BitJWSAuthenticator(Authenticator):
             data = bitjws.sign_serialize(self.privkey, **request.params)
         request.params = {}
         request.data = data
-        request.headers['Content-Type'] = 'application/jws'
+        request.headers['Content-Type'] = 'application/jose'
         return request
 
 
@@ -132,7 +132,7 @@ class BitJWSRequestsResponseAdapter(IncomingResponse):
 
     def json(self, **kwargs):
         if 'content-type' in self._delegate.headers and \
-                'application/jws' in self._delegate.headers['content-type']:
+                'application/jose' in self._delegate.headers['content-type']:
             rawtext = self.text.decode('utf8')
             headers, jso = bitjws.validate_deserialize(rawtext)
         else:
