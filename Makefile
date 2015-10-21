@@ -10,3 +10,4 @@ clean:
 
 rst:
 	pandoc --from=markdown_github --to=rst --output=README.rst README.md
+

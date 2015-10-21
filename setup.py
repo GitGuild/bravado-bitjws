@@ -22,8 +22,7 @@ setup(
     setup_requires=['pytest-runner'],
     install_requires=[
         "bravado-core >= 3.0.2",
-        "bravado >= %s" % bravado_bitjws.version,
-        "bitjws >= 0.5.3",
+        "pyasn1 >= 0.1.9"
     ],
     tests_require=['pytest', 'pytest-cov']
 )
