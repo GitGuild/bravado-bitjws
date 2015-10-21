@@ -70,6 +70,9 @@ from bravado_bitjws.requests_client import BitJWSRequestsClient
 log = logging.getLogger(__name__)
 
 
+__all__ = ['BitJWSSwaggerClient', 'BitJWSResourceDecorator']
+
+
 class BitJWSSwaggerClient(SwaggerClient):
     """
     A client for accessing a Swagger-documented RESTful service,

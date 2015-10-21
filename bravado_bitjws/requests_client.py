@@ -11,6 +11,8 @@ from bravado.http_future import HttpFuture
 
 log = logging.getLogger(__name__)
 
+__all__ = ['BitJWSRequestsClient', 'BitJWSAuthenticator']
+
 
 class BitJWSAuthenticator(Authenticator):
     """BitJWS authenticator uses JWS and the CUSTOM-BITCOIN-SIGN algorithm.

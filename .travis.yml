@@ -1,0 +1,25 @@
+language: python
+python:
+  - "2.7"
+
+sudo: false
+
+addons:
+  apt:
+    packages:
+      - git
+      - libtool
+      - autoconf
+      - automake
+
+before_install:
+  - pip install -U coveralls
+
+install:
+  - python setup.py -q install
+
+script:
+  - python setup.py pytest --addopts "--cov=bravado_bitjws --cov-append tests"
+
+after_success:
+  - coveralls
