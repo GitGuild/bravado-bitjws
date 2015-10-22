@@ -4,13 +4,12 @@ import bravado_bitjws
 classifiers = [
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 2",
-    "Programming Language :: Python :: 3",
     "Topic :: Software Development :: Libraries",
 ]
 
 setup(
     name="bravado-bitjws",
-    version=bravado_bitjws.version,
+    version='0.0.9',
     description="Library for accessing Swagger-enabled API's with bitjws authentication.",
     author='Ira Miller',
     author_email='ira@deginner.com',

@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
-import logging
 import json
 import bitjws
 import requests
 import requests.auth
-from bravado.requests_client import *
+from bravado.requests_client import (Authenticator, RequestsClient,
+                                     RequestsResponseAdapter,
+                                     RequestsFutureAdapter)
 
 from bravado.http_future import HttpFuture
-
-log = logging.getLogger(__name__)
 
 __all__ = ['BitJWSRequestsClient', 'BitJWSAuthenticator']
 
@@ -40,6 +39,7 @@ class BitJWSRequestsClient(RequestsClient):
     """
 
     def __init__(self):
+        super(BitJWSRequestsClient, self).__init__()
         self.session = requests.Session()
         self.authenticator = None
 

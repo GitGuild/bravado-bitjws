@@ -43,31 +43,13 @@ To get a client
 
     client = bravado.client.SwaggerClient.from_url(swagger_spec_url)
 """
-import functools
-import logging
-import sys
 import bitjws
+import urlparse
 
-from bravado_core.docstring import create_operation_docstring
-from bravado_core.exception import MatchingResponseNotFound
-from bravado_core.exception import SwaggerMappingError
-from bravado_core.param import marshal_param
-from bravado_core.response import unmarshal_response
-from bravado_core.spec import Spec
-import six
-from six import iteritems, itervalues
-from six.moves.urllib import parse as urlparse
+from bravado.client import SwaggerClient
 
-from bravado.docstring_property import docstring_property
-from bravado.exception import HTTPError
-from bravado.requests_client import RequestsClient
-from bravado.swagger_model import Loader
-from bravado.warning import warn_for_deprecated_op
-
-from bravado.client import *
 from bravado_bitjws.requests_client import BitJWSRequestsClient
 
-log = logging.getLogger(__name__)
 
 
 __all__ = ['BitJWSSwaggerClient']
@@ -79,14 +61,11 @@ class BitJWSSwaggerClient(SwaggerClient):
     which also uses bitjws authentication.
     """
 
-    def __init__(self, swagger_spec, resource_decorator=None):
+    def __init__(self, swagger_spec):
         """
         :param swagger_spec: :class:`bravado_core.spec.Spec`
-        :param resource_decorator: The ResourceDecorator class to use
-        :type  resource_decorator: ResourceDecorator
         """
-        super(BitJWSSwaggerClient, self).__init__(swagger_spec,
-                resource_decorator=resource_decorator)
+        super(BitJWSSwaggerClient, self).__init__(swagger_spec)
 
     @classmethod
     def from_url(cls, spec_url, http_client=None, privkey=None, **kwargs):
@@ -107,8 +86,8 @@ class BitJWSSwaggerClient(SwaggerClient):
         if http_client is None:
             host = urlparse.urlsplit(spec_url).hostname
             http_client = BitJWSRequestsClient()
-            http_client.set_bitjws_key(host,
-                    bitjws.privkey_to_wif(privkey.private_key))
+            private_key = bitjws.privkey_to_wif(privkey.private_key)
+            http_client.set_bitjws_key(host, private_key)
         return SwaggerClient.from_url(spec_url, http_client=http_client,
                                       **kwargs)
 
@@ -133,9 +112,9 @@ class BitJWSSwaggerClient(SwaggerClient):
         if http_client is None:
             host = urlparse.urlsplit(origin_url).hostname
             http_client = BitJWSRequestsClient()
-            http_client.set_bitjws_key(host,
-                    bitjws.privkey_to_wif(privkey.private_key))
+            private_key = bitjws.privkey_to_wif(privkey.private_key)
+            http_client.set_bitjws_key(host, private_key)
 
         return SwaggerClient.from_spec(spec_dict, http_client=http_client,
-                                      **kwargs)
+                                       **kwargs)
 
