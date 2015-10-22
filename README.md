@@ -1,12 +1,12 @@
-# bravado-bitjws [![Build Status](https://travis-ci.org/deginner/bravado-bitjws.svg?branch=master)](https://travis-ci.org/deginner/bravado-bitjws) [![Coverage](https://coveralls.io/repos/deginner/bravado-bitjws/badge.svg?branch=master&service=github)](https://coveralls.io/github/deginner/bravado-bitjws?branch=master) [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/deginner/bitjws?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
+# bravado-bitjws [![PyPi version](https://img.shields.io/pypi/v/bravado-bitjws.svg)](https://pypi.python.org/pypi/bravado-bitjws/) [![Build Status](https://travis-ci.org/deginner/bravado-bitjws.svg?branch=master)](https://travis-ci.org/deginner/bravado-bitjws) [![Coverage](https://coveralls.io/repos/deginner/bravado-bitjws/badge.svg?branch=master&service=github)](https://coveralls.io/github/deginner/bravado-bitjws?branch=master) [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/deginner/bitjws?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
 
 Bravado-bitjws is an add on for [Bravado](https://github.com/Yelp/bravado) that allows [bitjws](https://github.com/g-p-g/bitjws) authentication.
 
 ## Installation
 
-At the moment, installing from source is the only supported method.
+Bravado-bitjws can be installed by running:
 
-`python setup.py install`
+`pip install bravado-bitjws`
 
 ## Usage
 

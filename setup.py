@@ -9,7 +9,7 @@ classifiers = [
 
 setup(
     name="bravado-bitjws",
-    version='0.0.9',
+    version='0.1.0',
     description="Library for accessing Swagger-enabled API's with bitjws authentication.",
     author='Ira Miller',
     author_email='ira@deginner.com',
