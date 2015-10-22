@@ -6,7 +6,6 @@ import requests
 import requests.auth
 from bravado.requests_client import *
 
-from bravado.http_client import HttpClient
 from bravado.http_future import HttpFuture
 
 log = logging.getLogger(__name__)
@@ -36,38 +35,13 @@ class BitJWSAuthenticator(Authenticator):
         return request
 
 
-class BitJWSRequestsClient(HttpClient):
+class BitJWSRequestsClient(RequestsClient):
     """Synchronous HTTP client implementation.
     """
 
     def __init__(self):
         self.session = requests.Session()
         self.authenticator = None
-
-    @staticmethod
-    def separate_params(request_params):
-        """Splits the passed in dict of request_params into two buckets.
-
-        - sanitized_params are valid kwargs for constructing a
-          requests.Request(..)
-        - misc_options are things like timeouts which can't be communicated
-          to the Requests library via the requests.Request(...) constructor.
-
-        :param request_params: kitchen sink of request params. Treated as a
-            read-only dict.
-        :returns: tuple(sanitized_params, misc_options)
-        """
-        sanitized_params = request_params.copy()
-        misc_options = {}
-
-        if 'connect_timeout' in sanitized_params:
-            misc_options['connect_timeout'] = \
-                sanitized_params.pop('connect_timeout')
-
-        if 'timeout' in sanitized_params:
-            misc_options['timeout'] = sanitized_params.pop('timeout')
-
-        return sanitized_params, misc_options
 
     def request(self, request_params, response_callback=None):
         """
@@ -89,48 +63,14 @@ class BitJWSRequestsClient(HttpClient):
             response_callback,
         )
 
-    def set_basic_auth(self, host, username, password):
-        self.authenticator = BasicAuthenticator(
-            host=host, username=username, password=password)
-
-    def set_api_key(self, host, api_key, param_name=u'api_key'):
-        self.authenticator = ApiKeyAuthenticator(
-            host=host, api_key=api_key, param_name=param_name)
-
     def set_bitjws_key(self, host, privkey):
         self.authenticator = BitJWSAuthenticator(host=host, privkey=privkey)
 
-    def authenticated_request(self, request_params):
-        return self.apply_authentication(requests.Request(**request_params))
 
-    def apply_authentication(self, request):
-        if self.authenticator and self.authenticator.matches(request.url):
-            return self.authenticator.apply(request)
-        return request
-
-
-class BitJWSRequestsResponseAdapter(IncomingResponse):
+class BitJWSRequestsResponseAdapter(RequestsResponseAdapter):
     """Wraps a requests.models.Response object to provide a uniform interface
     to the response innards.
     """
-
-    def __init__(self, requests_lib_response):
-        """
-        :type requests_lib_response: :class:`requests.models.Response`
-        """
-        self._delegate = requests_lib_response
-
-    @property
-    def status_code(self):
-        return self._delegate.status_code
-
-    @property
-    def text(self):
-        return self._delegate.text
-
-    @property
-    def reason(self):
-        return self._delegate.reason
 
     def json(self, **kwargs):
         jso = {}
