@@ -89,8 +89,7 @@ class BitJWSSwaggerClient(SwaggerClient):
                 resource_decorator=resource_decorator)
 
     @classmethod
-    def from_url(cls, spec_url, http_client=None, request_headers=None,
-                 config=None, resource_decorator=None, privkey=None):
+    def from_url(cls, spec_url, http_client=None, privkey=None, **kwargs):
         """
         Build a :class:`SwaggerClient` from a url to the Swagger
         specification for a RESTful API.
@@ -99,14 +98,7 @@ class BitJWSSwaggerClient(SwaggerClient):
         :type spec_url: str
         :param http_client: an HTTP client used to perform requests
         :type  http_client: :class:`bravado.http_client.HttpClient`
-        :param request_headers: Headers to pass with http requests
-        :type  request_headers: dict
-        :param config: bravado_core config dict. See
-            bravado_core.spec.CONFIG_DEFAULTS
-        :param resource_decorator: The ResourceDecorator class to use
-        :type  resource_decorator: ResourceDecorator
         """
-        log.debug(u"Loading from %s" % spec_url)
         if privkey is None:
             privkey = bitjws.PrivateKey()
         elif isinstance(privkey, str):
@@ -117,25 +109,20 @@ class BitJWSSwaggerClient(SwaggerClient):
             http_client = BitJWSRequestsClient()
             http_client.set_bitjws_key(host,
                     bitjws.privkey_to_wif(privkey.private_key))
-        request_headers = request_headers or {}
-        request_headers['content-type'] = 'application/jose'
-        loader = Loader(http_client, request_headers=request_headers)
-        spec_dict = loader.load_spec(spec_url)
-        return cls.from_spec(spec_dict, spec_url, http_client, config,
-                             resource_decorator, privkey)
+        return SwaggerClient.from_url(spec_url, http_client=http_client,
+                                      **kwargs)
 
     @classmethod
     def from_spec(cls, spec_dict, origin_url=None, http_client=None,
-                  config=None, resource_decorator=None, privkey=None):
+                  privkey=None, **kwargs):
         """
         Build a :class:`SwaggerClient` from swagger api docs
 
         :param spec_dict: a dict with a Swagger spec in json-like form
         :param origin_url: the url used to retrieve the spec_dict
         :type  origin_url: str
-        :param config: Configuration dict - see spec.CONFIG_DEFAULTS
-        :param resource_decorator: The ResourceDecorator class to use
-        :type  resource_decorator: ResourceDecorator
+        :param http_client: an HTTP client used to perform requests
+        :type  http_client: :class:`bravado.http_client.HttpClient`
         :param str privkey: The WIF private key to use for bitjws signing
         """
         if privkey is None:
@@ -149,8 +136,6 @@ class BitJWSSwaggerClient(SwaggerClient):
             http_client.set_bitjws_key(host,
                     bitjws.privkey_to_wif(privkey.private_key))
 
-        resource_decorator = resource_decorator or ResourceDecorator
-        swagger_spec = Spec.from_dict(
-            spec_dict, origin_url, http_client, config)
-        return cls(swagger_spec, resource_decorator)
+        return SwaggerClient.from_spec(spec_dict, http_client=http_client,
+                                      **kwargs)
 

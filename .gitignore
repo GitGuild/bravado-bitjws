@@ -58,3 +58,6 @@ target/
 
 # Gedit temp files
 *~
+
+# supervisord required tests
+test/supervisord.conf

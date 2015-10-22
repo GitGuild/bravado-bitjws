@@ -30,3 +30,11 @@ def test_init_PrivateKey():
     assert bitjws.privkey_to_wif(privkey.private_key) == \
             bitjws.privkey_to_wif(ckey.private_key)
 
+def test_init():
+    client = BitJWSSwaggerClient.from_spec(load_file(specurl),
+                                           'https://0.0.0.0:8002')
+    assert 'coin' in client.swagger_spec.definitions
+    assert 'user' in client.swagger_spec.definitions
+    ckey = client.coin.addCoin.swagger_spec.http_client.authenticator.privkey
+    assert isinstance(ckey, bitjws.PrivateKey)
+
