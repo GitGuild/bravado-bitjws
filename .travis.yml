@@ -24,6 +24,7 @@ before_install:
   - pushd bravado
   - python setup.py install
   - popd
+  - rm -fR bravado
   - pip install -U coveralls
 
 install:

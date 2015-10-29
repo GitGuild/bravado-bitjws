@@ -9,7 +9,7 @@ classifiers = [
 
 setup(
     name="bravado-bitjws",
-    version='0.1.1.1',
+    version='0.1.1.2',
     description="Library for accessing Swagger-enabled API's with bitjws authentication.",
     author='Deginner',
     author_email='ira@deginner.com',
@@ -25,5 +25,9 @@ setup(
         "secp256k1==0.11",
         "bitjws==0.6.3.1"
     ],
-    tests_require=['pytest', 'pytest-cov']
+    tests_require=[
+        "httpretty",
+        "pytest",
+        "pytest-cov"
+    ]
 )
