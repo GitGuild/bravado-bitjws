@@ -50,8 +50,6 @@ from bravado.client import SwaggerClient
 
 from bravado_bitjws.requests_client import BitJWSRequestsClient
 
-
-
 __all__ = ['BitJWSSwaggerClient']
 
 

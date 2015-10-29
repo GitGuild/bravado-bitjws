@@ -53,15 +53,25 @@ class BitJWSRequestsClient(RequestsClient):
         self.session = requests.Session()
         self.authenticator = None
 
-    def request(self, request_params, response_callback=None):
+    def request(self, request_params, operation=None, response_callbacks=None,
+                also_return_response=False):
         """
         :param request_params: complete request data.
         :type request_params: dict
-        :param response_callback: Function to be called on the response
+        :param operation: operation that this http request is for. Defaults
+            to None - in which case, we're obviously just retrieving a Swagger
+            Spec.
+        :type operation: :class:`bravado_core.operation.Operation`
+        :param response_callbacks: List of callables to post-process the
+            incoming response. Expects args incoming_response and operation.
+        :param also_return_response: Consult the constructor documentation for
+            :class:`bravado.http_future.HttpFuture`.
+
         :returns: HTTP Future object
         :rtype: :class: `bravado_core.http_future.HttpFuture`
         """
         sanitized_params, misc_options = self.separate_params(request_params)
+
         requests_future = RequestsFutureAdapter(
             self.session,
             self.authenticated_request(sanitized_params),
@@ -70,8 +80,10 @@ class BitJWSRequestsClient(RequestsClient):
         return HttpFuture(
             requests_future,
             BitJWSRequestsResponseAdapter,
-            response_callback,
-        )
+            operation,
+            response_callbacks,
+            also_return_response)
+
 
     def set_bitjws_key(self, host, privkey):
         """

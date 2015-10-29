@@ -21,10 +21,10 @@
         "https"
     ],
     "consumes": [
-        "application/jsw"
+        "application/jose"
     ],
     "produces": [
-        "application/jsw"
+        "application/jose"
     ],
     "securityDefinitions": {
         "kid": {
@@ -63,7 +63,7 @@
                 "description": "get a list of all coins you own",
                 "operationId": "findCoin",
                 "produces": [
-                    "application/jsw"
+                    "application/jose"
                 ],
                 "responses": {
                     "200": {
@@ -98,7 +98,7 @@
                 "description": "Creates a new coin.",
                 "operationId": "addCoin",
                 "produces": [
-                    "application/jsw"
+                    "application/jose"
                 ],
                 "parameters": [
                     {
@@ -143,7 +143,7 @@
                 "description": "Returns a coin based on a single ID",
                 "operationId": "findCoinById",
                 "produces": [
-                    "application/jsw",
+                    "application/jose",
                     "application/xml",
                     "text/xml",
                     "text/html"
@@ -265,7 +265,7 @@
                 "description": "get your user record",
                 "operationId": "getUserList",
                 "produces": [
-                    "application/jsw"
+                    "application/jose"
                 ],
                 "responses": {
                     "200": {
@@ -300,7 +300,7 @@
                 "description": "Register a new User.",
                 "operationId": "addUser",
                 "produces": [
-                    "application/jsw"
+                    "application/jose"
                 ],
                 "parameters": [
                     {
@@ -345,7 +345,7 @@
                 "description": "Returns a user based on a single ID",
                 "operationId": "findUserById",
                 "produces": [
-                    "application/jsw"
+                    "application/jose"
                 ],
                 "parameters": [
                     {
