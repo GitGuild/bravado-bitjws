@@ -61,12 +61,6 @@ class BitJWSSwaggerClient(SwaggerClient):
     which also uses bitjws authentication.
     """
 
-    def __init__(self, swagger_spec):
-        """
-        :param swagger_spec: :class:`bravado_core.spec.Spec`
-        """
-        super(BitJWSSwaggerClient, self).__init__(swagger_spec)
-
     @classmethod
     def from_url(cls, spec_url, http_client=None, privkey=None, **kwargs):
         """
