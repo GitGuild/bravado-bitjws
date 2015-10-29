@@ -1,6 +1,6 @@
 pyasn1 >= 0.1.9
 bravado-core
 git+https://github.com/isysd/bravado
-bitjws
+bitjws==0.6.3.1
 six
 
