@@ -1,15 +1,21 @@
 # -*- coding: utf-8 -*-
-import json
+"""
+Wrappers for the bravado.requests_client classes.
+"""
+
 import bitjws
+import json
 import requests
 import requests.auth
+import time
 from bravado.requests_client import (Authenticator, RequestsClient,
                                      RequestsResponseAdapter,
                                      RequestsFutureAdapter)
 
 from bravado.http_future import HttpFuture
 
-__all__ = ['BitJWSRequestsClient', 'BitJWSAuthenticator']
+__all__ = ['BitJWSRequestsClient', 'BitJWSAuthenticator',
+           'BitJWSRequestsResponseAdapter']
 
 
 class BitJWSAuthenticator(Authenticator):
@@ -25,12 +31,16 @@ class BitJWSAuthenticator(Authenticator):
 
     def apply(self, request):
         if len(request.data) > 0:
-            data = bitjws.sign_serialize(self.privkey, **json.loads(request.data))
+            data = bitjws.sign_serialize(self.privkey, requrl=request.url,
+                                         iat=time.time(),
+                                         data=json.loads(request.data))
         else:
-            data = bitjws.sign_serialize(self.privkey, **request.params)
+            data = bitjws.sign_serialize(self.privkey, requrl=request.url,
+                                         iat=time.time(),
+                                         data=request.params)
         request.params = {}
         request.data = data
-        request.headers['Content-Type'] = 'application/jose'
+        request.headers['content-type'] = 'application/jose'
         return request
 
 
@@ -64,6 +74,10 @@ class BitJWSRequestsClient(RequestsClient):
         )
 
     def set_bitjws_key(self, host, privkey):
+        """
+        :param host: The host to authenticate for.
+        :param privkey: This client's private key to sign with.
+        """
         self.authenticator = BitJWSAuthenticator(host=host, privkey=privkey)
 
 
@@ -77,9 +91,14 @@ class BitJWSRequestsResponseAdapter(RequestsResponseAdapter):
         if 'content-type' in self._delegate.headers and \
                 'application/jose' in self._delegate.headers['content-type']:
             rawtext = self.text.decode('utf8')
-            headers, jwtpayload = bitjws.validate_deserialize(rawtext)
+            headers, jwtpayload = \
+                    bitjws.validate_deserialize(rawtext, requrl='/response')
+            if headers is None:
+                raise bitjws.jws.InvalidPayload("Response failed validation")
             if 'data' in jwtpayload:
                 jso = jwtpayload['data']
+            else:
+                jso = jwtpayload
         else:
             jso = self._delegate.json(**kwargs)
         return jso
