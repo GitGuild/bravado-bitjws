@@ -4,6 +4,7 @@ import os
 import pytest
 import requests
 import time
+import urlparse
 from bravado.swagger_model import load_file
 from bravado_bitjws.client import BitJWSSwaggerClient
 from bravado_bitjws.requests_client import *
@@ -24,11 +25,12 @@ def test_apply_auth():
     assert len(req.params) == 0
     assert req.headers['content-type'] == 'application/jose'
 
-    h, p = bitjws.validate_deserialize(req.data, requrl=url)
+    path = urlparse.urlsplit(req.url).path
+    h, p = bitjws.validate_deserialize(req.data, requrl=path)
     assert 'message' in p['data']
     assert p['data']['message'] == params['message']
     assert 'aud' in p
-    assert p['aud'] == url
+    assert p['aud'] == path
 
 
 def test_apply_auth_json():
@@ -44,7 +46,8 @@ def test_apply_auth_json():
     assert len(req.params) == 0
     assert req.headers['content-type'] == 'application/jose'
 
-    h, p = bitjws.validate_deserialize(req.data, requrl=url)
+    path = urlparse.urlsplit(req.url).path
+    h, p = bitjws.validate_deserialize(req.data, requrl=path)
     assert 'message' in p['data']
     assert p['data']['message'] == rawdata['message']
 
