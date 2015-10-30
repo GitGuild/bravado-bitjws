@@ -8,6 +8,7 @@ import json
 import requests
 import requests.auth
 import time
+import urlparse
 from bravado.requests_client import (Authenticator, RequestsClient,
                                      RequestsResponseAdapter,
                                      RequestsFutureAdapter)
@@ -30,17 +31,21 @@ class BitJWSAuthenticator(Authenticator):
         self.privkey = bitjws.PrivateKey(bitjws.wif_to_privkey(privkey))
 
     def apply(self, request):
+        path = urlparse.urlsplit(request.url).path
         if len(request.data) > 0:
-            data = bitjws.sign_serialize(self.privkey, requrl=request.url,
+
+            data = bitjws.sign_serialize(self.privkey, requrl=path,
                                          iat=time.time(),
                                          data=json.loads(request.data))
         else:
-            data = bitjws.sign_serialize(self.privkey, requrl=request.url,
+            data = bitjws.sign_serialize(self.privkey, requrl=path,
                                          iat=time.time(),
                                          data=request.params)
         request.params = {}
         request.data = data
-        request.headers['content-type'] = 'application/jose'
+        # not sure why some use Caps and others don't, but set both!
+        request.headers['Content-Type'] = request.headers['content-type'] = \
+            'application/jose'
         return request
 
 
