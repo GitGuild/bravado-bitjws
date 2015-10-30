@@ -29,6 +29,7 @@ def test_good_call():
     resp = client.coin.findCoin().result()
     assert resp[0].metal == coin[0]['metal']
     assert resp[0].mint == coin[0]['mint']
+    assert httpretty.last_request().headers['content-type'] == 'application/jose'
 
     httpretty.disable()
     httpretty.reset()
